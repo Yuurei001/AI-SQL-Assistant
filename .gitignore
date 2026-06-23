@@ -1,0 +1,48 @@
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Local environment configuration
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Python compiled / cache files
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+.mypy_cache/
+
+# Node modules
+node_modules/
+
+# Logs and outputs
+logs/
+outputs/
+*.log
+
+# Editor-specific settings
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+

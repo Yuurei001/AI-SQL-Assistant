@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedQuery AI — Agentic SQL Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Lớp phủ khi mở sidebar trên mobile -->
+    <div class="overlay" id="overlay" onclick="toggleSidebar(false)"></div>
+
+    <div class="app">
+        <!-- ══════════ SIDEBAR ══════════ -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-head">
+                <div class="brand">
+                    <span class="brand-mark" aria-hidden="true"></span>
+                    <div>
+                        <strong>MedQuery AI</strong>
+                        <small>Agentic SQL Assistant</small>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn-new" onclick="newConversation()">
+                <span>＋</span> Cuộc hội thoại mới
+            </button>
+
+            <div class="sidebar-section">
+                <p class="sidebar-label">Lịch sử</p>
+                <div class="history-list" id="historyList">
+                    <p class="history-empty">Chưa có hội thoại nào.</p>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <p class="sidebar-label">Hệ thống</p>
+                <button class="side-link" onclick="openSchema()">
+                    <span>DB</span> Schema Explorer
+                </button>
+                <div class="tool-list" id="toolList"></div>
+            </div>
+
+            <div class="sidebar-foot">
+                <button class="theme-toggle" onclick="toggleTheme()" id="themeToggle">
+                    <span id="themeIcon">🌙</span>
+                    <span id="themeText">Chế độ tối</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- ══════════ MAIN ══════════ -->
+        <main class="main">
+            <header class="topbar">
+                <button class="icon-btn menu-btn" onclick="toggleSidebar(true)" aria-label="Menu">☰</button>
+                <div class="topbar-title">
+                    <h1>Medical Data Intelligence Workspace</h1>
+                    <p>Agentic AI · Plan-and-Execute · Feedback Loop · Self-Correction</p>
+                </div>
+                <div class="status-chip" id="statusChip">
+                    <span class="dot"></span><span id="statusText">Đang kiểm tra…</span>
+                </div>
+            </header>
+
+            <section class="system-overview" aria-label="Chỉ số hệ thống">
+                <div class="metric">
+                    <span class="metric-label">Truy vấn</span>
+                    <strong id="metricQueries">0</strong>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Thành công</span>
+                    <strong id="metricSuccess">0%</strong>
+                </div>
+                <div class="metric">
+                    <span class="metric-label">Thời gian TB</span>
+                    <strong id="metricLatency">0 ms</strong>
+                </div>
+                <div class="metric metric-agent">
+                    <span class="pulse-ring"></span>
+                    <div>
+                        <span class="metric-label">Agent runtime</span>
+                        <strong id="metricAgent">Sẵn sàng</strong>
+                    </div>
+                </div>
+            </section>
+
+            <section class="chat" id="chat">
+                <!-- Empty state -->
+                <div class="empty-state" id="emptyState">
+                    <div class="empty-icon">AI</div>
+                    <h2>Truy vấn dữ liệu bằng ngôn ngữ tự nhiên</h2>
+                    <p>Hãy đặt câu hỏi về dữ liệu bằng ngôn ngữ tự nhiên. Hệ thống sẽ lập kế hoạch,
+                       sinh SQL, kiểm tra, thực thi và tự sửa lỗi nếu cần.</p>
+                    <div class="suggestions" id="suggestions">
+                        <button class="chip" onclick="askExample('Top 10 pizza theo doanh thu')">Top 10 pizza theo doanh thu</button>
+                        <button class="chip" onclick="askExample('Tổng số đơn và doanh thu theo thành phố')">Đơn &amp; doanh thu theo thành phố</button>
+                        <button class="chip" onclick="askExample('Thời gian giao hàng trung bình theo chi nhánh')">Thời gian giao trung bình</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ══════════ INPUT ══════════ -->
+            <footer class="composer">
+                <div class="composer-inner">
+                    <textarea id="questionInput" rows="1"
+                        placeholder="Hỏi điều gì đó về cơ sở dữ liệu…"
+                        onkeydown="onKey(event)" oninput="autoGrow(this)"></textarea>
+                    <button class="btn-send" id="sendBtn" onclick="sendQuestion()" aria-label="Gửi">
+                        <span class="send-arrow">➤</span>
+                    </button>
+                </div>
+                <p class="composer-hint">Enter để gửi · Shift+Enter để xuống dòng</p>
+            </footer>
+        </main>
+    </div>
+
+    <!-- Schema modal -->
+    <div class="modal" id="schemaModal">
+        <div class="modal-card">
+            <div class="modal-head">
+                <h3>Schema cơ sở dữ liệu</h3>
+                <button class="icon-btn" onclick="closeSchema()">✕</button>
+            </div>
+            <pre class="schema-pre" id="schemaPre">Đang tải…</pre>
+        </div>
+    </div>
+
+    <!-- Toast container -->
+    <div class="toast-wrap" id="toastWrap"></div>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

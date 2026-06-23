@@ -1,0 +1,28 @@
+{
+  "database": "database.db",
+  "query_count": 10,
+  "iterations_per_query": 20,
+  "validation_samples": 200,
+  "execution_samples": 200,
+  "validation_ms": {
+    "mean": 0.583,
+    "median": 0.563,
+    "p95": 0.89
+  },
+  "execution_ms": {
+    "mean": 3.587,
+    "median": 3.212,
+    "p95": 6.259
+  },
+  "average_rows": 4.8,
+  "self_correction": {
+    "success": true,
+    "retries": 1,
+    "final_sql": "SELECT name, price FROM pizzas ORDER BY price DESC LIMIT 5",
+    "timeline_steps": 9
+  },
+  "notes": [
+    "Benchmark chạy offline, không tính độ trễ mạng hoặc Gemini API.",
+    "Self-correction dùng phản hồi LLM giả lập để kiểm tra logic điều phối."
+  ]
+}
